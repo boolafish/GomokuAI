@@ -15,6 +15,7 @@ kivy.require('1.9.1')
 
 
 class BoardLayout(FloatLayout):
+    """The main layout for gomoku game."""
     def __init__(self, **kwargs):
         super(BoardLayout, self).__init__(**kwargs)
         self.add_widget(Image(source='img/wood.jpg', keep_ratio=False, allow_stretch=True))
@@ -27,10 +28,12 @@ class BoardLayout(FloatLayout):
 
 
 class BoardGrid(GridLayout):
+    """The grid that holds all stones."""
     def __init__(self, **kwargs):
         super(BoardGrid, self).__init__(**kwargs)
         self.size_hint = (None, None)
         self.rows = self.cols = 15
+        self.last_stone = None
         for row in range(15):
             for col in range(15):
                 self.add_widget(Stone((row, col)))
@@ -47,6 +50,9 @@ class BoardGrid(GridLayout):
         # The children seems to be reversed...
         stone = self.children[224-n]
         stone.show_stone(event.stone_color)
+        if self.last_stone:
+            self.last_stone.remove_dot()
+        self.last_stone = stone
 
     def draw_grid(self):
         self.canvas.before.clear()
@@ -88,6 +94,8 @@ class Stone(FloatLayout):
     def __init__(self, move, **kwargs):
         super(Stone, self).__init__(**kwargs)
         self.move = move
+        self.stone_img = Image(size_hint=(.7, .7),
+                               pos_hint={'center_x': 0.5, 'center_y': 0.5})
         self.bind(on_touch_up=self.click)
 
     def click(self, instance, touch):
@@ -100,13 +108,14 @@ class Stone(FloatLayout):
     def show_stone(self, color):
         self.funbind('on_touch_up', self.click)
         if color == 'b':
-            self.add_widget(Image(source='img/black.png',
-                                  size_hint=(.7, .7),
-                                  pos_hint={'center_x': 0.5, 'center_y': 0.5}))
+            self.stone_img.source = 'img/black_dot.png'
+            self.add_widget(self.stone_img)
         elif color == 'w':
-            self.add_widget(Image(source='img/white.png',
-                                  size_hint=(.7, .7),
-                                  pos_hint={'center_x': 0.5, 'center_y': 0.5}))
+            self.stone_img.source = 'img/white_dot.png'
+            self.add_widget(self.stone_img)
+
+    def remove_dot(self):
+        self.stone_img.source = self.stone_img.source.replace('_dot', '')
 
 
 class GomokuApp(App):
