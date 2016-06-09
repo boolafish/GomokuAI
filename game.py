@@ -1,6 +1,6 @@
 class GomokuGame:
     def __init__(self, player1_cls, player2_cls):
-        self._board = [[None] * 15 for _ in range(15)]
+        self._board = [['.'] * 15 for _ in range(15)]
         self.players = [player1_cls('b'), player2_cls('w')]
         self.moves = 0
         self._event_callback = None
@@ -40,13 +40,13 @@ class GomokuGame:
         moves = []
         for row in range(15):
             for col in range(15):
-                if self._board[row][col] is None:
+                if self._board[row][col] is '.':
                     moves.append((row, col))
         return moves
 
     def is_legal_move(self, move):
         # If None, the move is not occupied by any stone.
-        if self._board[move[0]][move[1]] is None:
+        if self._board[move[0]][move[1]] is '.':
             return True
 
     def set_event_callback(self, func):
