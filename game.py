@@ -21,7 +21,6 @@ class GomokuGame:
                 me = MoveEvent(self.current_player.stone_color, move)
                 self._event_callback(me)
             self.moves += 1
-        print('GG')
 
     def get_current_board(self):
         """Return a copy of current board."""
@@ -32,11 +31,28 @@ class GomokuGame:
         return self.players[self.moves % 2]
 
     def is_final_state(self):
-        # todo: implement this
+        #return winner, 0:none, 1:black, 2:white, 3:board full
+        color_dict = {0:'b', 1:'w'}
+        for row in range(15):
+            for col in range(15):
+                for color in ['b', 'w']:
+                    if self._board[row][col] == color:
+                        win_flag = [1,1,1,1]
+                        for i in range(1, 5):
+                            if row + i >= 15 or self._board[row + i][col] != color:
+                                win_flag[0] = 0
+                            if col + i >= 15 or self._board[row][col + i] != color:
+                                win_flag[1] = 0
+                            if row + i >= 15 or col + i >= 15 or self._board[row + i][col + i] != color:
+                                win_flag[2] = 0
+                            if row + i >= 15 or col -i < 0 or self._board[row + i][col - i] != color:
+                                win_flag[3] = 0
+                        if any(win_flag):
+                            return ['b', 'w'].index(color) + 1
         if not self.get_legal_moves():
-            return True
+            return 3
         else:
-            return False
+            return 0
 
     def get_legal_moves(self):
         moves = []
