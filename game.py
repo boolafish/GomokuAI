@@ -24,7 +24,7 @@ class GomokuGame:
 
     def get_current_board(self):
         """Return a copy of current board."""
-        return tuple([tuple(row) for row in self._board])
+        return list([list(row) for row in self._board])
 
     @property
     def current_player(self):
@@ -82,7 +82,7 @@ class GomokuGame:
 
     def _is_nearby_empty(self, nearby_length, row, col):
         for r in range(row-nearby_length, row+nearby_length+1):
-            for c in range(col-nearby_length, row+nearby_length+1):
+            for c in range(col-nearby_length, col+nearby_length+1):
                 if r < 0 or c < 0 or r >= 15 or c >= 15:
                     continue
                 if self._board[r][c] is not '.':

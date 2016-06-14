@@ -80,7 +80,5 @@ def scan_patterns(board, pattern_file):
             elif 'w' in p:
                 _p = p.replace('.', '[^w]')
             occurrence[i] += len(re.findall(r'(?=(%s))' % _p, line))
-            if p != p[::-1]:
-                occurrence[i] += len(re.findall(r'(?=(%s))' % _p, line[::-1]))
 
     return occurrence
