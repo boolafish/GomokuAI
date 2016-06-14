@@ -1,3 +1,5 @@
+import random
+
 class GomokuGame:
     def __init__(self, player1_cls, player2_cls):
         self._board = [['.'] * 15 for _ in range(15)]
@@ -43,6 +45,33 @@ class GomokuGame:
                 if self._board[row][col] is '.':
                     moves.append((row, col))
         return moves
+
+    def get_legal_nearby_moves(self, nearby_length=1):
+        """
+        This gives nearby moves within the nearby_length 
+        (ex. nearby_length=1 --> would search for current_place-1 ~ current_place+1
+        --> 3*3 area )
+        However, if no moves are found, give a random move.
+        """
+        moves = []
+        for row in range(15):
+            for col in range(15):
+                if self._board[row][col] is '.':
+                    if not self._is_nearby_empty(nearby_length, row, col):
+                        moves.append((row, col))
+        if len(moves) == 0:
+            moves.append(random.choice(self.get_legal_moves()))
+
+        return moves
+
+    def _is_nearby_empty(self, nearby_length, row, col):
+        for r in range(row-nearby_length, row+nearby_length+1):
+            for c in range(col-nearby_length, row+nearby_length+1):
+                if r < 0 or c < 0 or r >= 15 or c >= 15:
+                    continue
+                if self._board[r][c] is not '.':
+                    return False
+        return True
 
     def is_legal_move(self, move):
         # If None, the move is not occupied by any stone.
