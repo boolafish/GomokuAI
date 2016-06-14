@@ -9,7 +9,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
 
 from game import GomokuGame
-from player import GuiPlayer, RandomAIPlayer
+from player import GuiPlayer, RandomAIPlayer, ReinforceAIPlayer, GuiTestPlayer, ReinforceRandomPlayer
 
 kivy.require('1.9.1')
 
@@ -94,7 +94,7 @@ class Stone(FloatLayout):
     def __init__(self, move, **kwargs):
         super(Stone, self).__init__(**kwargs)
         self.move = move
-        self.stone_img = Image(size_hint=(.7, .7),
+        self.stone_img = Image(size_hint=(.9, .9),
                                pos_hint={'center_x': 0.5, 'center_y': 0.5})
         self.bind(on_touch_up=self.click)
 
@@ -121,7 +121,10 @@ class Stone(FloatLayout):
 class GomokuApp(App):
     def __init__(self, **kwargs):
         super(GomokuApp, self).__init__(**kwargs)
-        self.game = GomokuGame(RandomAIPlayer, RandomAIPlayer)
+        #self.game = GomokuGame(GuiPlayer, GuiPlayer)
+        #self.game = GomokuGame(GuiTestPlayer, GuiTestPlayer)
+        self.game = GomokuGame(ReinforceAIPlayer, ReinforceRandomPlayer)
+        #self.game = GomokuGame(RandomAIPlayer, RandomAIPlayer)
 
     def build(self):
         layout = BoardLayout()
